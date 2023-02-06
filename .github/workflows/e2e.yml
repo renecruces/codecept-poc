@@ -1,0 +1,32 @@
+name: E2E Test
+
+on: [workflow_dispatch]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Use Node 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: npm
+
+      - name: Install packages
+        run: npm ci
+
+      - name: E2E Testing
+        run: npm run e2e:android
+        env:
+          APP_BUNDLE_ID: ${{ secrets.APP_BUNDLE_ID }}
+          BROWSERSTACK_APP_ANDROID_URL: ${{ secrets.BROWSERSTACK_APP_ANDROID_URL }}
+          BROWSERSTACK_APP_IOS_URL: ${{ secrets.BROWSERSTACK_APP_IOS_URL }}
+          BROWSERSTACK_USER: ${{ secrets.BROWSERSTACK_USER }}
+          BROWSERSTACK_KEY: ${{ secrets.BROWSERSTACK_KEY }}
+          MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
+          MAILOSAUR_SERVER_ID: ${{ secrets.MAILOSAUR_SERVER_ID }}
+          MAILOSAUR_SERVER_DOMAIN: ${{ secrets.MAILOSAUR_SERVER_DOMAIN }}
